@@ -1,0 +1,34 @@
+import os
+import shutil
+import datetime
+
+# Pasta onde estão os boletos
+from pathlib import Path
+pasta_boletos = r"C:\Users\arthu\OneDrive\Área de Trabalho\automação\Boletos"
+
+
+# Pasta onde serão organizados os boletos a vencer
+from pathlib import Path
+pasta_boletos_a_vencer = r"C:\Users\arthu\OneDrive\Área de Trabalho\automação\Boletos_a_vencer'"
+
+# Pasta onde serão organizados os boletos pagos
+from pathlib import Path
+pasta_boletos_pagos = r"C:\Users\arthu\OneDrive\Área de Trabalho\automação\Boletos_pagos"
+
+# Obter a data atual
+data_atual = datetime.date.today()
+
+# Percorrer todos os arquivos na pasta de boletos
+for arquivo in os.listdir(pasta_boletos):
+    # Verificar se o arquivo é um boleto
+    if arquivo.endswith(".pdf"):
+        # Obter a data de vencimento do boleto (assumindo que a data está no nome do arquivo)
+        data_vencimento = datetime.strptime(arquivo[:10],"%Y-%M-%D").date()
+        
+        # Verificar se o boleto está a vencer ou já venceu
+        if data_vencimento >= data_atual:
+            # Mover o boleto para a pasta de boletos a vencer
+            shutil.move(os.path.join(pasta_boletos, arquivo), os.path.join(pasta_boletos_a_vencer, arquivo))
+        else:
+            # Mover o boleto para a pasta de boletos pagos
+            shutil.move(os.path.join(pasta_boletos, arquivo), os.path.join(pasta_boletos_pagos, arquivo))
